@@ -55,18 +55,18 @@ test_expect_success 'setup' '
 
 run_three_modes () {
 	test_when_finished rm -rf .git/objects/info/commit-graph &&
-	$1 <input >actual &&
+	"$@" <input >actual &&
 	test_cmp expect actual &&
 	cp commit-graph-full .git/objects/info/commit-graph &&
-	$1 <input >actual &&
+	"$@" <input >actual &&
 	test_cmp expect actual &&
 	cp commit-graph-half .git/objects/info/commit-graph &&
-	$1 <input >actual &&
+	"$@" <input >actual &&
 	test_cmp expect actual
 }
 
 test_three_modes () {
-	run_three_modes "test-tool reach $1"
+	run_three_modes test-tool reach "$1"
 }
 
 test_expect_success 'ref_newer:miss' '
@@ -223,7 +223,7 @@ test_expect_success 'commit_contains:hit' '
 	EOF
 	echo "commit_contains(_,A,X,_):1" >expect &&
 	test_three_modes commit_contains &&
-	test_three_modes "commit_contains --tag"
+	test_three_modes commit_contains --tag
 '
 
 test_expect_success 'commit_contains:miss' '
